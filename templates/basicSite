@@ -20,39 +20,39 @@
 				text-align: left;
 			}
 			p {
-				word-wrap: break-word;
-				overflow: hidden;
+				word-wrap: break-word; /* prevents stuff from creating scrollbars, a web designer's naturual enemy*/
+				overflow: hidden; /* if for some reason it decides it's done with breaking words, overflow will not create scrollbars. */
 			}
 			body
 			{
-				margin: 0 auto;
+				margin: 0 auto; /* this allows the menubar to take up the space at the edge of the screen. div.norm will add the normal margin back to the rest of the page. */
 			}
 			div.norm
 			{
-				padding: 8px;
+				padding: 8px; /*gives 8px of space from the edge, something that the body would normally take care of but we need the menubar to not have space between it and the edge of the screen */
 			}	
 			div.nav {
-				/* position: fixed; */
+				/* position: fixed; */ /*causes the menubar to float over stuff. Is disabled, i don't like it. */
 				overflow: hidden; /* if the menubar has too much stuff, it will not scroll */
 				background-color: #3399ff; /* set the background color to blue */
-				margin: 0 auto; /* fixes something or something */
+				margin: 0 auto; /* makes things centered */
 				text-align: center;  /* alligns the text in the center */
 			}	
 			div a.nav {
-				display: inline-block;
-				color: white;
-				text-align: center;
-				padding: 14px 16px;
-				text-decoration: none;
+				display: inline-block; /* display it as a box */
+				color: white; /* set its text color to white */
+				text-align: center; /* align the text to the center of the box */
+				padding: 14px 16px; /* give it some padding so there is space arround the text, and make the menubar thicker */
+				text-decoration: none; /* No underlining in the links */
 
-				transition: background-color 0.5s;
+				transition: background-color 0.5s; /* When the background color changes, animate it for 0.5s */
 				}
 
 			div a.nav:hover {
-				background-color: #0066ff;
+				background-color: #0066ff; /* On hover, change the background to a darker blue. Since a.nav has an animation for background color, this will change over 0.5s */
 			}
 			body {
-				background-color: #9999ff
+				background-color: #99aaff 
 			}
 		</style>
 		<div class="nav">
