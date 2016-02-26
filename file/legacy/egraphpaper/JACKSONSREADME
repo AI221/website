@@ -1,0 +1,5 @@
+What I was working on was a web implementation of Egraphpaper, a program I made myself for my 8th grade math class. It was a rather simple program that was basically electronic graphpaper--hence the name. It would
+allow each cell to have 1 number or letter--or a graphical - or | (not in text). This helped me do my math homework in 8th grade as I had horrable handwriting my teach couldn't follow(and I was struggling, so I
+needed a lot of help). It was written in love2d, and this was an attempt to port that application to the web using a shoddy love2dweb 3rd party application.
+
+Now that I do fine in math, it doesn't really matter because I get the right answer frequently enough to make such a programs' feasability questionable.
