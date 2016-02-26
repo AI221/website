@@ -257,7 +257,7 @@ def submittopic():
 	cont[b].append([[webSafeTxt(t),webSafeTxt(p)]])
 	#cont[b][len(cont[b])+1][0][1] = p
 	print(cont)
-	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(len(cont[b])-1)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"#apparrently they're going to have to take the back button to court
+	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(len(cont[b])-1)+"\"/></head><p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"#apparrently they're going to have to take the back button to court
 
 @app.route('/forum/viewtopic/',methods=['GET'])
 def viewtopic():

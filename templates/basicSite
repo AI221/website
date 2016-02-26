@@ -33,10 +33,10 @@
 			}	
 			div.nav {
 				/* position: fixed; */
-				overflow: hidden;
-				background-color: #3399ff;
-				margin: 0 auto;
-				text-align: center; 
+				overflow: hidden; /* if the menubar has too much stuff, it will not scroll */
+				background-color: #3399ff; /* set the background color to blue */
+				margin: 0 auto; /* fixes something or something */
+				text-align: center;  /* alligns the text in the center */
 			}	
 			div a.nav {
 				display: inline-block;
