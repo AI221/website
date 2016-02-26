@@ -153,7 +153,7 @@ names = ["the website","the website's site-wide configuration file"];
 @app.route('/source',methods=['GET'])
 def srcindex(): 
 	f=request.args.get('f')
-	return webStart + basicSiteHead + bodyStart + basicSiteNav + "<p>This a hosting for " + names[int(f)] + ". <a href=\"/source/html?f="+str(f)+"\">View</a> <a href=\"/source/htmlr?f="+str(f)+"\">(raw)</a> or <a href=\"/source/file?f="+str(f)+"\">download</a>" + bodyEnd + webEnd;
+	return render_template("sources.html",name=names[int(f)]),f=f)
 @app.route('/source/htmlr/', methods=['GET'])
 def srchtmlr():
 	f=request.args.get('f')
