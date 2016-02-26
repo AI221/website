@@ -1,5 +1,6 @@
 #!/bin/bash
-
+git config --global credential.helper 'cache --timeout=3600'
+echo Git configuration modified. Global credential.helper set to chache with 3000ms timeout.
 while [ "1" = "1" ]
 do
 	echo "Git posted!"
