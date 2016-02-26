@@ -169,17 +169,7 @@ def srcfile():
 	return send_file(sources[int(f)]) 
 @app.route('/source/all/')
 def srcall():
-	s = "<h1>Files hosted here</h1><p>";
-	i = 0;
-	while True:
-		s = s + "<a href=\"/source?f=" + str(i) + "\">" + names[i] + "</a><br>"
-		print(i);
-		i=i+1;
-		if len(sources) == i:
-			break;
-	s = s + "</p>";
-	return webStart + basicSiteHead + bodyStart + basicSiteNav + s + bodyEnd + webEnd;
-
+	return render_template("allSource.html",names=names)
 
 
 

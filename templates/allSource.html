@@ -1,9 +1,12 @@
 {% extends "basicSite"  %}
 {% block body %}
 	<div class="norm">
+		<h1>Files hosted here</h1>
 		<p class="bodyNorm">
-			{% for line in htmllines %}
-				{{line}}<br>
+			{% set i = -1 %}
+			{% for name in names %}
+				{% set i = i+1 %}
+				<a href="/source?f={{i}}">{{name}}</a><br>
 			{% endfor %}
 		</p>
 	</div>
