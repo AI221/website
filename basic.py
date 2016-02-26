@@ -153,7 +153,10 @@ names = ["the website","the website's site-wide configuration file"];
 @app.route('/source',methods=['GET'])
 def srcindex(): 
 	f=request.args.get('f')
-	return render_template("sources.html",name=names[int(f)],f=f)
+
+	name = names[int(f)]
+	nameC = name[0:1].upper()+name[1:]
+	return render_template("sources.html",name=nameC,f=f)
 @app.route('/source/htmlr/', methods=['GET'])
 def srchtmlr():
 	f=request.args.get('f')
@@ -174,49 +177,6 @@ def srcall():
 
 
 
-'''class invObj(object):
-	areas = [["A"],["B"]];
-	areas[0].append(["Mark's Hair Dirt", "A pickle", "Max Traps"]);
-	areas[0].append([1,1,27]);
-	areas[1].append(["Golden Carrots", "My free time", "Hax","Ideas","Your IQ",]);
-	areas[1].append([24,0,1337,0,2]);
-	def areaWebsite(self,area):
-		asmStr = "<table><tr><td>Name of Item</td><td>Quantity of Item</td></tr>";
-		i = 0;
-		while len(self.areas[area][1]) > i:
-			#return self.areas[area][1][i]
-			asmStr = asmStr +  "<tr><td>"+self.areas[area][1][i]+"</td><td>"+str(self.areas[area][2][i])+"</td></tr>";
-			i = i+1
-		
-		asmStr = asmStr + "</table>"
-		
-
-		return webStart + invSiteHead + bodyStart + asmStr + bodyEnd + webEnd;
-		
-
-objects =[["test",invObj()],["Brain damblig4",invObj()]]
-
-
-
-class InvMan(object):
-	@cherrypy.expose
-	def index(self):
-		area="/home/pi/website/file/inv/pilot"
-		
-		invSite = open("/home/pi/website/inv.html","r").read();
-		return webStart + invSiteHead  + bodyStart +  invSite + bodyEnd + webEnd;
-	#	return 						str(objects[0][1].areas[0])# + str(t.getAreas()[1]);
-	@cherrypy.expose
-	def showClass(self,c=0,s=False):
-		if s:
-			#return  str(objects[int(c)][1].areas[int(s)])
-			return objects[int(c)][1].areaWebsite(int(s));
-		else:
-			return "yup" + str(objects[int(c)][1].areas)
-'''
-
-
-
 
 boards=["Dumb","Dumber","Dumbest"]
 cont = [ [], [],[] ]
@@ -230,7 +190,7 @@ def forumindex():
 		i = i+1
 		if len(boards) == i:
 			break;	
-	return webStart + basicSiteHead + bodyStart + basicSiteNav+ s  + bodyEnd + webEnd;
+	return s
 @app.route('/forum/viewboard/',methods=['GET'])
 def viewboard():
 	b=request.args.get('b')
@@ -246,7 +206,7 @@ def viewboard():
 				break;	
 			s = s+"<h2><a href=\"/forum/viewtopic?b=" + str(b) + "&t=" + str(i) +"\">"+webSafeTxt(cont[b][i][0][0])+"</a></h2><hr>"
 	
-	return webStart + basicSiteHead + bodyStart + basicSiteNav+ s  + bodyEnd + webEnd;	
+	return s
 
 
 
@@ -262,7 +222,7 @@ def uisubmittopic():
 		postortopic="topic";
 		postvars="";
 
-	return webStart + basicSiteHead + bodyStart + basicSiteNav+ "<form method=POST action=\"/forum/submit"+postortopic+"?b="+b+"\"><input type=\"text\" name=\"b\" value=\""+b+"\"hidden>"+postvars+"Topic name:<br><input type=\"text\" name=\"t\"><br>Post contents:<br><input type=\"text\" name=\"p\"><br><input type=\"submit\" value=\"Submit\">"+ bodyEnd + webEnd;	
+	return "<form method=POST action=\"/forum/submit"+postortopic+"?b="+b+"\"><input type=\"text\" name=\"b\" value=\""+b+"\"hidden>"+postvars+"Topic name:<br><input type=\"text\" name=\"t\"><br>Post contents:<br><input type=\"text\" name=\"p\"><br><input type=\"submit\" value=\"Submit\">"	
 
 	
 
@@ -282,7 +242,7 @@ def submitpost():
 	cont[b][d].append([webSafeTxt(t),webSafeTxt(p)])
 	#cont[b][len(cont[b])+1][0][1] = p
 	print(cont)
-	return webStart + "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(d)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"+bodyEnd+webEnd; #apparrently they're going to have to take the back button to court
+	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(d)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>" #apparrently they're going to have to take the back button to court
 
 @app.route('/forum/submittopic',methods=['POST'])
 def submittopic():
@@ -297,7 +257,7 @@ def submittopic():
 	cont[b].append([[webSafeTxt(t),webSafeTxt(p)]])
 	#cont[b][len(cont[b])+1][0][1] = p
 	print(cont)
-	return webStart + "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(len(cont[b])-1)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"+bodyEnd+webEnd; #apparrently they're going to have to take the back button to court
+	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(len(cont[b])-1)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"#apparrently they're going to have to take the back button to court
 
 @app.route('/forum/viewtopic/',methods=['GET'])
 def viewtopic():
@@ -317,7 +277,7 @@ def viewtopic():
 			if len(cont[b][t]) == i:
 				break;	
 
-	return webStart + basicSiteHead + bodyStart + basicSiteNav+ s  + bodyEnd + webEnd;	
+	return s 
 
 ''' @cherrypy.expose
 def error_page_404(status, message, traceback, version):
