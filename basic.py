@@ -161,7 +161,7 @@ def srchtmlr():
 @app.route('/source/html/', methods=['GET'])
 def srchtml():
 	f=request.args.get('f')
-	return render_template("shtml.html",html = open(sources[int(f)]).read()) 
+	return render_template("shtml.html",htmllines = open(sources[int(f)]).read().splitlines()) 
 
 @app.route('/source/file/', methods=['GET'])
 def srcfile():
