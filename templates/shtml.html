@@ -3,12 +3,7 @@
 	<div class="norm">
 		<p class="bodyNorm">
 			{% for line in htmllines %}
-				{% for letter in line %}
-					{% if letter == "	" %}
-						&#160
-					{% else %}
-						{{letter}}
-					{% endif %}
+				{% for letter in line %}{% if letter == "	" %}&nbsp;{% else %}{{letter}}{% endif %}{% endfor %}
 				<br>
 			{% endfor %}
 		</p>
