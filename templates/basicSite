@@ -46,7 +46,7 @@
 				text-decoration: none; /* No underlining in the links */
 
 				transition: background-color 0.5s; /* When the background color changes, animate it for 0.5s */
-				}
+			}
 
 			div a.nav:hover {
 				background-color: #0066ff; /* On hover, change the background to a darker blue. Since a.nav has an animation for background color, this will change over 0.5s */
