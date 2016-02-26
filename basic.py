@@ -272,7 +272,7 @@ def viewtopic():
 		i = 1;
 		while True:
 			s = s+"<h2><a href=\"/forum/viewtopic?b=" + str(i) +"\">"+webSafeTxt(cont[b][t][i][0])+"</a></h2>"
-			s = s+"<p>"+webSafeTxt(cont[b][t][i][1])+"</p><hr>"
+			s = s+"<p>"+webSafeTxt(cont[b][t][i][1])+"</p><hr"
 			i = i+1
 			if len(cont[b][t]) == i:
 				break;	
