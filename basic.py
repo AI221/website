@@ -157,7 +157,7 @@ def srcindex():
 @app.route('/source/htmlr/', methods=['GET'])
 def srchtmlr():
 	f=request.args.get('f')
-	return webSafeTxt(open(sources[int(f)]).read()) #This displays the content on a web page and doesn't work very well	
+	return webSafeTxt(open(sources[int(f)]).read()) 
 @app.route('/source/html/', methods=['GET'])
 def srchtml():
 	f=request.args.get('f')
