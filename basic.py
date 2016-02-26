@@ -89,6 +89,65 @@ def getanerror():
 	
 
 
+
+
+
+
+
+
+
+
+#TO: UNCLEANED CODE
+#- - -#
+#- - -#
+#- | -#
+#- - -#
+#- - -#
+#- | -#
+#- - -#
+#- - -#
+#- | -#
+#- - -#
+#- - -#
+#- | -#
+#- - -#
+#- - -#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 sources = ["/home/pi/website/basic.py","/home/pi/website/site.conf"];
 names = ["the website","the website's site-wide configuration file"];
 @app.route('/source',methods=['GET'])
