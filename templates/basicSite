@@ -56,7 +56,11 @@
 			}
 		</style>
 		<div class="nav">
-			<div class="nav"><a class="nav" href="/">Home</a><a class="nav" href="/forum">Forum</a><a class="nav" href="/source/all">Hosted files</a></div>
+			<div class="nav">
+				<a class="nav" href="/">Home</a>
+				<a class="nav" href="/forum">Forum</a>
+				<a class="nav" href="/source/all">Hosted files</a>
+			</div>
 		</div>
 	{% block body %}
 		<body>
