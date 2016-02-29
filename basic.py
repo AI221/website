@@ -266,7 +266,7 @@ cherrypy.config.update({'error_page.500': error_page_500})
 '''
 @app.errorhandler(404)
 def error_404(err):
-	return render_template("error.html",msg="404")
+	return render_template("error.html",head="404",msg=err+"")
 
 
 if __name__ == '__main__':
