@@ -54,6 +54,7 @@
 			body {
 				background-color: #99aaff 
 			}
+			{% block custcss %} {% endblock %}
 		</style>
 		<div class="nav">
 			<div class="nav">
