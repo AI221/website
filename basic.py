@@ -34,33 +34,6 @@ import sqlite3 as sq
 
 
 
-def refrshChache():
-	#starts
-	global webStart
-	global webEnd
-	global bodyStart
-	global bodyEnd
-	global basicSiteHead
-	global basicSiteNav
-	global invSiteHead
-
-	print("Refreshing database...");
-	webStart = (r'<!DOCTYPE html>'
-	r'<html>'
-	r'<!--Server-sided Source code availiable on /source, running on CherryPy-->'
-	);
-	webEnd = (r'</html>');
-	bodyStart = r'<body>'
-	bodyEnd = r'</body>'
-	
-	#optionals
-	basicSiteHead = r'<head>' + open('/home/pi/website/file/heads/basicSite').read() + r'</head>';
-	basicSiteNav = open('/home/pi/website/file/heads/basicSiteNav').read()
-	invSiteHead = r'<head>' + open('/home/pi/website/file/heads/inv').read() + r'</head>';
-	print(basicSiteHead);
-
-
-#refrshChache();
 #print(basicSiteHead);
 
 
@@ -291,7 +264,9 @@ def error_page_500(status, message, traceback, version):
 
 cherrypy.config.update({'error_page.500': error_page_500})
 '''
-
+@app.errorhandler(404)
+def error_404():
+	return render_template("error.html")
 
 
 if __name__ == '__main__':
