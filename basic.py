@@ -252,21 +252,13 @@ def viewtopic():
 
 	return s 
 
-''' @cherrypy.expose
-def error_page_404(status, message, traceback, version):
-	return webStart + basicSiteHead + bodyStart + basicSiteNav + "<h1>404</h1><p>You've tried to look at a page on my site. Luckily, your eyes are spared, as the page does not exist.</p>" + bodyEnd + webEnd;
-
-cherrypy.config.update({'error_page.404': error_page_404})
-
-@cherrypy.expose
+'''
 def error_page_500(status, message, traceback, version):
-	return webStart + basicSiteHead + bodyStart + basicSiteNav + "<h1>I dun goofed</h1><p>For once, this isn't your fault, it's mine. Unless you are me. Then it's both of our fault.<br>If you're not sure what to do, try going back, or to the homepage.<br><br><br><hr>Cherrpy version " + version+"<br>Error traceback: "+traceback + bodyEnd + webEnd;
-
-cherrypy.config.update({'error_page.500': error_page_500})
+	return webStart + basicSiteHead + bodyStart + basicSiteNav + "+ bodyEnd + webEnd;
 '''
 @app.errorhandler(404)
 def error_404(err):
-	return render_template("error.html",head="404",msg=err+"")
+	return render_template("error.html",head="404",msg="You've tried to look at a page on my site. Luckily, your eyes are spared, as the page does not exist.")
 
 
 if __name__ == '__main__':
