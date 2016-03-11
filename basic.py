@@ -49,13 +49,11 @@ def webSafeTxt(stringTo):
 
 @app.route("/")
 def index():
-	#cherrypy.log("hello there")
-	#site = open("/home/pi/website/homepage.html","r").read();
-	#refrshChache();
-	#return webStart + basicSiteHead + bodyStart + basicSiteNav + site + bodyEnd + webEnd;
-		
-        #return "<p>Hello World!</p>"
 	return render_template("homepage.html")
+
+@app.route("/aboutme")
+def aboutme():
+	return render_template("aboutme.html")
 @app.route("/geterror/")
 def getanerror():
 	return "string"-"string"
@@ -234,7 +232,6 @@ def submittopic():
 
 @app.route('/forum/viewtopic/',methods=['GET'])
 def viewtopic():
-	b=request.args.get('b')
 	t=request.args.get('t')
 	#assemble topic
 	b=int(b);
