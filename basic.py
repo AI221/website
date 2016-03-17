@@ -7,10 +7,12 @@
 #import pickle;
 
 #I put semicolins at the end of my lines. Deal with it.(the reason is becuase if I don't, I'll forget to do it while programming c++)
-from flask import Flask,request,send_file,render_template
+from flask import Flask,request,send_file,render_template,g
 app = Flask(__name__)
 import sys
 import sqlite3 as sq
+
+
 
 #cherrypy.config.update({'server.socket_port': 80});
 #cherrypy.config.update({"log.access_file":"/tmp/cherrylog"});
@@ -147,114 +149,141 @@ def srcall():
 
 
 
+#New forums
+#These will work by having unique post nums and board nums.
+
+#SQL:
+def get_db():
+	sql = getattr(g, 'forumdb', None)
+	if sql is None:
+		sql = g._database = sq.connect("forumdb")
+		return sql
 
 
-boards=["Dumb","Dumber","Dumbest"]
-cont = [ [], [],[] ]
-@app.route('/forum/')
-def forumindex():
-	#assemble boards
-	s = "<h1>Forums</h1><h2>Anyone can post here and there's no cap on the ammount of posts per second. What could go wrong?</h2>"
-	i = 0;
-	while True:
-		s = s+"<h2><a href=\"/forum/viewboard?b=" + str(i) +"\">"+boards[i]+"</a></h2><hr>"
-		i = i+1
-		if len(boards) == i:
-			break;	
-	return s
-@app.route('/forum/viewboard/',methods=['GET'])
-def viewboard():
-	b=request.args.get('b')
-	#assemble boards
-	b=int(b);
-	s = "<h1>"+boards[b]+"</h1><p><br><a href=\"/forum/uisubmittopic?b="+str(b)+"\">Submit topic</a></p><hr><br><br>"
-	i = -1;
-	if len(cont) > b:
-		while True:
-			i = i+1
-			print(i);
-			if len(cont[b]) == i:
-				break;	
-			s = s+"<h2><a href=\"/forum/viewtopic?b=" + str(b) + "&t=" + str(i) +"\">"+webSafeTxt(cont[b][i][0][0])+"</a></h2><hr>"
-	
-	return s
-
-
-
-@app.route('/forum/uisubmittopic/',methods=['GET'])
-def uisubmittopic():
-	b=request.args.get('b')
-	d=request.args.get('d')
-	if not d:
-		d = "-1";
-	postortopic = "post";
-	postvars = "<input type=\"text\" name=\"d\" value=\""+d+"\"hidden>";
-	if d=="-1":
-		postortopic="topic";
-		postvars="";
-
-	return "<form method=POST action=\"/forum/submit"+postortopic+"?b="+b+"\"><input type=\"text\" name=\"b\" value=\""+b+"\"hidden>"+postvars+"Topic name:<br><input type=\"text\" name=\"t\"><br>Post contents:<br><input type=\"text\" name=\"p\"><br><input type=\"submit\" value=\"Submit\">"	
-
-	
-
-
-@app.route('/forum/submitpost',methods=['POST'])
-def submitpost():
-	b=request.form.get('b')
-	t=request.form.get('t')
-	p=request.form.get('p')
-	d=request.form.get('d')
-	if t == "":
-		t = "Anyone got some spare change?(Title auto-picked based on position in life)";
-	if p == "":
-		p = "I'm on the streets and could really use some change, anyone?(Body auto-picked based on position in life)";
-	b = int(b);
-	d = int(d);
-	cont[b][d].append([webSafeTxt(t),webSafeTxt(p)])
-	#cont[b][len(cont[b])+1][0][1] = p
-	print(cont)
-	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(d)+"\"/></head>"+bodyStart+"<p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>" #apparrently they're going to have to take the back button to court
-
-@app.route('/forum/submittopic',methods=['POST'])
-def submittopic():
-	b=request.form.get('b')
-	t=request.form.get('t')
-	p=request.form.get('p')
-	if t == "":
-		t = "Anyone got some spare change?(Title auto-picked based on position in life)";
-	if p == "":
-		p = "I'm on the streets and could really use some change, anyone?(Body auto-picked based on position in life)";
-	b = int(b);
-	cont[b].append([[webSafeTxt(t),webSafeTxt(p)]])
-	#cont[b][len(cont[b])+1][0][1] = p
-	print(cont)
-	return "<head><meta http-equiv=\"refresh\" content=\"0; url=viewtopic?b="+str(b)+"&t="+str(len(cont[b])-1)+"\"/></head><p>You're somehow still able to use an ancient browser that doesn't support redirecting. I highly recommend you upgrade, but for now, you can sue the back button.</p>"#apparrently they're going to have to take the back button to court
-
-@app.route('/forum/viewtopic/',methods=['GET'])
-def viewtopic():
-	t=request.args.get('t')
-	#assemble topic
-	b=int(b);
-	t=int(t);
-	s = "<h1>"+webSafeTxt(cont[b][t][0][0])+"</h1><p>"+webSafeTxt(cont[b][t][0][1])+"</p><br><br><a href=/forum/uisubmittopic?b="+str(b)+"&d="+str(t)+">Submit post</a><hr><br><br>"
-	if len(cont[b][t]) > 1:
+def clrForum():
+	sql=get_db()
+	c = sql.cursor()
+	c.execute("DROP TABLE Posts") 
+	c.execute("DROP TABLE Topics")
+	c.execute("DROP TABLE Boards")
+	c.execute("DROP TABLE Meta")
+	c.execute("CREATE TABLE Posts (name TEXT , desc TEXT , time INT , topic INT , id INT)")
+	c.execute("CREATE TABLE Topics (name TEXT , desc TEXT, lastpost INT, board INT, id INT)")
+	c.execute("CREATE TABLE Boards (name TEXT , desc TEXT, id INT)")
+	c.execute("CREATE TABLE Meta ( lastboardid INT ,  lasttopicid INT , lastpostid INT , lastuserid INT )")
+	c.close()
+	s.commit()
 		
-		i = 1;
-		while True:
-			s = s+"<h2><a href=\"/forum/viewtopic?b=" + str(i) +"\">"+webSafeTxt(cont[b][t][i][0])+"</a></h2>"
-			s = s+"<p>"+webSafeTxt(cont[b][t][i][1])+"</p><hr"
-			i = i+1
-			if len(cont[b][t]) == i:
-				break;	
 
-	return s 
 
-'''
-def error_page_500(status, message, traceback, version):
-	return webStart + basicSiteHead + bodyStart + basicSiteNav + "+ bodyEnd + webEnd;
-'''
+@app.route("/forum")
+def markisafeegit():
+	sql=get_db()
+	c = sql.cursor()
+	alls = c.execute("SELECT * FROM Boards").fetchall() #SQL STATEMENTS ARE IN CAPITALS TO MAKE THE DATABASE SENSE THE URGENCY AND GO FASTER
+	c.close()
+	return render_template("forum.html",alls=alls,what="Boards",linkprefix="/viewboard/",linked=True)
+
+@app.route("/viewboard/<board>")
+def viewboard(board):
+	try:
+		board=str(int(board))
+	except:
+		return render_template("error.html",head="Input error",msg="Board number must be number!")
+	sql=get_db()
+	c = sql.cursor()
+	try:
+		alls = c.execute("SELECT * FROM Topics WHERE board = "+board+" ORDER BY lastpost" ).fetchall() #Select from topics where their board number is the corect board number, and order them by time(lastpost should be a unix timestamp of the last post)
+
+	except: #board is empty
+		alls = []	
+	#get board name
+	try:
+		boardt = c.execute("SELECT * FROM Boards WHERE Id = "+board).fetchall()[0] #Select the board of the correct ID, which returns a table with a table with the board in it--go to the first thing in that table.
+		name = boardt[0] #name is the first thing in the table
+		desc = boardt[1] #description is the second
+	except:
+		name="(failed fetch board name)"
+		desc="(failed to fetch board description)"
+	c.close()
+	return render_template("forum.html",alls=alls,what="Topics for "+name,whatsdesc=desc, linkprefix="/viewtopic/",linked=True,newlink="/newtopic/"+board)
+
+#^ V MERGE
+
+
+@app.route("/viewtopic/<topic>")
+def viewtopic(topic):
+	try:
+		topic=str(int(topic))	
+	except:
+		return render_template("error.html",head="Input error",msg="Topic number must be number!")
+	sql=get_db()
+	c = sql.cursor()
+	try:
+		alls = c.execute("SELECT * FROM Posts WHERE topic = "+topic+" ORDER BY time" ).fetchall() #Select from posts where their topic number is the corect topic number, and order them by time(time should be a unix timestamp of the last post)
+
+	except: #board is empty
+		alls = []	
+	#get board name
+	try:
+		boardt = c.execute("SELECT * FROM Topics WHERE id = "+topic).fetchall()[0] #Select the board of the correct ID, which returns a table with a table with the board in it--go to the first thing in that table.
+		name = boardt[0] #name is the first thing in the table
+		desc = boardt[1] #description is the second
+	except:
+		name="(failed fetch topic name)"
+		desc="(failed to fetch topic description)"
+	c.close()
+	return render_template("forum.html",alls=alls,what="Posts for "+name,whatsdesc=desc,linkprefix="/viewtopic/",linked=False,newlink="/newpost/"+topic)
+
+@app.route("/newtopic/<board>",methods=["GET","POST"])
+def nTopic(board):
+	return newsomething(board,1)
+
+
+
+def newsomething(parrent,what):
+	if request.method == "GET":
+		return render_template("submitforum.html",what="topic",parrent=parrent)
+	#if it's post
+	title = request.form.get("title")
+	body = request.form.get("body")
+	try:
+		parrent = int(parrent)
+	except:
+		return render_template("error.html",head="Input error",msg="Parrent number must be number!")
+
+	s=get_db()
+	c = s.cursor()
+	meta = c.execute("SELECT * FROM Meta").fetchall()[0]
+	meta=list(meta)
+	c.execute("DELETE FROM Meta")
+	meta[what]=meta[what]+1
+	if what==0: #parrent
+		s()
+	elif what==1: #topic
+		c.executemany("INSERT INTO Topics VALUES( ?, ?, ? ,?, ? )",[(title,body,-1,parrent,meta[1])])
+	elif what==2: #post
+		c.executemany("INSERT INTO Posts VALUES( ?, ?, ? ,?, ? )",[(title,body,-1,parrent,meta[2])])
+
+	meta=tuple(meta)
+	c.execute("INSERT INTO Meta VALUES(?, ?, ?, ?)",meta)
+	c.close()
+	s.commit()
+	return "dun"
+	
+	
+		
+	
+
+
+
+
+
+
+
 @app.errorhandler(404)
 def error_404(err):
+	
 	return render_template("error.html",head="404",msg="You've tried to look at a page on my site. Luckily, your eyes are spared, as the page does not exist.")
 
 

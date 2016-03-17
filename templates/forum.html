@@ -1,0 +1,15 @@
+{% extends "basicSite"  %}
+{% block body %}
+	<div class="norm">
+	<a href="{{newlink}}">New</a><br>
+	<h1>{{what}}</h1>
+	<h2>{{whatsdesc}}</h2>
+	{% for item in alls %}
+		<h2>
+			{% if linked %}<a href="{{linkprefix}}{{item[-1]}}">{% endif %}{{item.0}}</h2>
+			{% if linked %}</a>{% endif %}
+		<p>{{item.1}}</p>
+		<hr><br>
+	{% endfor %}
+	</div>
+{% endblock %}
