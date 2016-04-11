@@ -121,7 +121,7 @@ def getanerror():
 
 
 
-sources = ["/home/pi/website/basic.py","/home/pi/website/site.conf"];
+sources = ["/website/basic.py","/website/site.conf"];
 names = ["the website","the website's site-wide configuration file"];
 @app.route('/source',methods=['GET'])
 def srcindex(): 
@@ -152,16 +152,18 @@ def srcall():
 #New forums
 #These will work by having unique post nums and board nums.
 
+
+dbname = "forumdb"
 #SQL:
 def get_db():
-	sql = getattr(g, 'forumdb', None)
+	sql = getattr(g, dbname, None)
 	if sql is None:
-		sql = g._database = sq.connect("forumdb")
+		sql = g._database = sq.connect(dbname)
 		return sql
 
 
 def clrForum():
-	sql=get_db()
+	sql=sq.connect(dbname)
 	c = sql.cursor()
 	c.execute("DROP TABLE Posts") 
 	c.execute("DROP TABLE Topics")
@@ -171,8 +173,9 @@ def clrForum():
 	c.execute("CREATE TABLE Topics (name TEXT , desc TEXT, lastpost INT, board INT, id INT)")
 	c.execute("CREATE TABLE Boards (name TEXT , desc TEXT, id INT)")
 	c.execute("CREATE TABLE Meta ( lastboardid INT ,  lasttopicid INT , lastpostid INT , lastuserid INT )")
+	c.execute("INSERT INTO Meta VALUES ( 0,0,0,0 )")
 	c.close()
-	s.commit()
+	sql.commit()
 		
 
 
@@ -241,7 +244,8 @@ def nTopic(board):
 
 
 
-def newsomething(parrent,what):
+@app.route("/newpost/<parrent>",methods=["GET","POST"])
+def newsomething(parrent,what=2):
 	if request.method == "GET":
 		return render_template("submitforum.html",what="topic",parrent=parrent)
 	#if it's post
@@ -258,18 +262,21 @@ def newsomething(parrent,what):
 	meta=list(meta)
 	c.execute("DELETE FROM Meta")
 	meta[what]=meta[what]+1
+	area = ""
 	if what==0: #parrent
 		s()
 	elif what==1: #topic
 		c.executemany("INSERT INTO Topics VALUES( ?, ?, ? ,?, ? )",[(title,body,-1,parrent,meta[1])])
+		area = "board" #worse is better. could make it redirect to the topic, but this would require a lot more code.
 	elif what==2: #post
 		c.executemany("INSERT INTO Posts VALUES( ?, ?, ? ,?, ? )",[(title,body,-1,parrent,meta[2])])
+		area = "topic"
 
 	meta=tuple(meta)
 	c.execute("INSERT INTO Meta VALUES(?, ?, ?, ?)",meta)
 	c.close()
 	s.commit()
-	return "dun"
+	return render_template("redirect.html",url="/view"+area+"/"+str(parrent))
 	
 	
 		
@@ -295,5 +302,9 @@ if __name__ == '__main__':
 		print("***DEBUG MODE***")
 		port = 81
 		app.debug=True
+	elif len(sys.argv) > 1 and sys.argv[1] == "-c":
+		#shitty area for this, move it you lazy f
+		clrForum()
+		errorOut();
 
 	app.run(host='0.0.0.0',port=port)
