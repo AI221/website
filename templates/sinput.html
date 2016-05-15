@@ -1,0 +1,10 @@
+{% extends "basicSite" %}
+{% block body %}
+	<h1>{{what}}</h1>
+	<form method=POST >
+		{% for item in items %}
+			{{item.0}}: <input type="{{item.1}}" name="{{item.2}}"><br>
+		{% endfor %}
+		<input type="submit" value = "{{buttontxt}}">		
+	</form>
+{% endblock %}

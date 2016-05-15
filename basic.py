@@ -3,45 +3,42 @@
 #I'm not liable for any damages caused by this software
 #USAGE
 #Do what you want.
-
-#import pickle;
-
+#------------------------------------------------
 #I put semicolins at the end of my lines. Deal with it.(the reason is becuase if I don't, I'll forget to do it while programming c++)
+import sys
+import getopt
 from flask import Flask,request,send_file,render_template,g
 app = Flask(__name__)
-import sys
 import sqlite3 as sq
 
+#--Unchanging variables--#
 
-
-#cherrypy.config.update({'server.socket_port': 80});
-#cherrypy.config.update({"log.access_file":"/tmp/cherrylog"});
-#cherrypy.config.update({"log.access_file":"/tmp/cherryerror"});
-#cherrypy.config.update({{'/file' : { 'tools.staticdir.on': True , 'tools.staticdir.dir': 'file'} });
+helpstr = "basic.py -d" 
 
 
 
+#--Command line arguements--#
+port=80
+app.debug=False
+ssl_context = None;
+print(sys.argv)
+if len(sys.argv) > 1 and sys.argv[1] == "-d":
+	print("***DEBUG MODE***")
+	port = 81
+	app.debug=True
+if len(sys.argv) > 1 and sys.argv[1] == "-fixthisdamnit":
+	print("***DEBUG MODE***")
+	port = 81
+	app.debug=True
+	ssl_context = ('/website/cert', '/website/key')
+elif len(sys.argv) > 1 and sys.argv[1] == "-c":
+	#shitty area for this, move it you lazy f
+	clrForum()
+	errorOut();
 
 
-#cherrypy.config.update({'log.screen': False,
-#                        'log.access_file': '',
-#                        'log.error_file': ''})
-#^ enable to disable logging
 
-#-----------------------------------------------#
-#~~~~~~Website starts, ends, and optionals~~~~~~#
-#-----------------------------------------------#
-# These are chached and are reset every few seconds
-
-
-
-
-#print(basicSiteHead);
-
-
-#Functions
-
-
+#Web safe text
 def webSafeTxt(stringTo):
 	stringTo = str(stringTo);
 	return str.replace( str.replace( str.replace(stringTo, '<' , '&lt;'),'>' , '&gt;') , '\n' , '<br>' ); #note: string.replace is depreciated
@@ -153,7 +150,7 @@ def srcall():
 #These will work by having unique post nums and board nums.
 
 
-dbname = "forumdb"
+dbname = "/website/forumdb"
 #SQL:
 def get_db():
 	sql = getattr(g, dbname, None)
@@ -165,10 +162,10 @@ def get_db():
 def clrForum():
 	sql=sq.connect(dbname)
 	c = sql.cursor()
-	c.execute("DROP TABLE Posts") 
-	c.execute("DROP TABLE Topics")
-	c.execute("DROP TABLE Boards")
-	c.execute("DROP TABLE Meta")
+	c.execute("DROP TABLE IF EXISTS Posts") 
+	c.execute("DROP TABLE IF EXISTS Topics")
+	c.execute("DROP TABLE IF EXISTS Boards")
+	c.execute("DROP TABLE IF EXISTS Meta")
 	c.execute("CREATE TABLE Posts (name TEXT , desc TEXT , time INT , topic INT , id INT)")
 	c.execute("CREATE TABLE Topics (name TEXT , desc TEXT, lastpost INT, board INT, id INT)")
 	c.execute("CREATE TABLE Boards (name TEXT , desc TEXT, id INT)")
@@ -247,7 +244,7 @@ def nTopic(board):
 @app.route("/newpost/<parrent>",methods=["GET","POST"])
 def newsomething(parrent,what=2):
 	if request.method == "GET":
-		return render_template("submitforum.html",what="topic",parrent=parrent)
+		return render_template("sinput.html",what="Create a topic",parrent=parrent, items=[["Title","text","title"],["Body","text","body"]],buttontxt="Create")
 	#if it's post
 	title = request.form.get("title")
 	body = request.form.get("body")
@@ -280,6 +277,23 @@ def newsomething(parrent,what=2):
 	
 	
 		
+
+
+
+
+@app.route("/epilepsy")
+def epilepsy():
+	return render_template("epilepsy.html")
+
+
+
+
+
+
+
+@app.route("/personal")
+def personal():
+	return render_template("personal.html")
 	
 
 
@@ -294,17 +308,10 @@ def error_404(err):
 	return render_template("error.html",head="404",msg="You've tried to look at a page on my site. Luckily, your eyes are spared, as the page does not exist.")
 
 
-if __name__ == '__main__':
-	port=80
-	app.debug=False
-	print(sys.argv)
-	if len(sys.argv) > 1 and sys.argv[1] == "-d":
-		print("***DEBUG MODE***")
-		port = 81
-		app.debug=True
-	elif len(sys.argv) > 1 and sys.argv[1] == "-c":
-		#shitty area for this, move it you lazy f
-		clrForum()
-		errorOut();
 
-	app.run(host='0.0.0.0',port=port)
+
+
+if __name__ == '__main__':
+	
+
+	app.run(host='0.0.0.0',port=port,ssl_context=ssl_context)

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>{% block title %}AI221's website{% endblock %}</title>
 
 		<style>
 			h1 {
@@ -34,22 +35,41 @@
 			{
 				padding: 8px; /*gives 8px of space from the edge, something that the body would normally take care of but we need the menubar to not have space between it and the edge of the screen */
 			}	
-			div.nav {
+			div.navdiv {
 				/* position: fixed; */ /*causes the menubar to float over stuff. Is disabled, i don't like it. */
 				overflow: hidden; /* if the menubar has too much stuff, it will not scroll */
 				background-color: #3399ff; /* set the background color to blue */
-				margin: 0 auto; /* makes things centered */
-				text-align: center;  /* alligns the text in the center */
+				/*margin: 0 auto; /* makes things centered */
 			}	
 			div a.nav {
 				display: inline-block; /* display it as a box */
 				color: white; /* set its text color to white */
-				text-align: center; /* align the text to the center of the box */
+				/*text-align: center; /* align the text to the center of the box */
 				padding: 14px 16px; /* give it some padding so there is space arround the text, and make the menubar thicker */
 				text-decoration: none; /* No underlining in the links */
 
 				transition: background-color 0.5s; /* When the background color changes, animate it for 0.5s */
 			}
+			div.navl {
+				float: left; /* align the text to the center of the box */
+				width: 25%;
+
+			}	
+			div.navr {
+				float: right; /* align the text to the center of the box */
+				text-align: right;
+				width: 25%;
+
+			}	
+
+
+			div.navn {
+				float: left; /* align the text to the center of the box */
+				text-align: center;
+				width: 50%;
+
+			}	
+
 
 			div a.nav:hover {
 				background-color: #0066ff; /* On hover, change the background to a darker blue. Since a.nav has an animation for background color, this will change over 0.5s */
@@ -59,15 +79,37 @@
 			}
 			{% block custcss %} {% endblock %}
 		</style>
-		<div class="nav">
-			<div class="nav">
-				<a class="nav" href="/">Home</a>
-				<a class="nav" href="/aboutme">About me</a>
-				<a class="nav" href="/forum">Forum</a>
-				<a class="nav" href="/source/all">Hosted files</a>
+		{% block nav %}
+			<div class="navdiv">
+				<div class = "navl">
+					{% block lstats %}
+					<!--this page has no navl-->
+					<p> </p> 
+					<!--^^placeholder, keeps the center menu from aligning to the left^^-->
+					{% endblock%}
+				</div>
+				<div class="navn">
+					{% block mstats %}
+						<!--standard middle-menubar-->
+						<a class="nav" href="/">Home</a>
+						<a class="nav" href="/aboutme">About me</a>
+						<a class="nav" href="/forum">Forum</a>
+						<a class="nav" href="/source/all">Hosted files</a>
+						<!--extensions, if any-->
+						{% block mstats_ext %}{% endblock %} 
+					{% endblock%}
+				
+				</div>
+				<div class = "navr">
+					{% block rstats %}
+					<!--this page has no navr. no placeholder needed for navr.-->
+					{% endblock %}
+				</div>
+
+
 			</div>
-		</div>
-	{% block body %}
+		{% endblock %}
+				{% block body %}
 		<body>
 			<p>Please add a body to this template.</p>
 		</body>
