@@ -1,0 +1,38 @@
+{% extends "basicSite"  %}
+{#% block mstats %}
+{% endblock %#}
+{% block nav %}<!--> {% endblock %}
+{% block custcss %}
+	body {
+		 /*background-color: #333333;*/
+		/*background: linear-gradient(#222222,white);*/
+		background: radial-gradient(#777777 5%, #666666 15%, #333333 60%);
+
+		background-repeat: no-repeat;
+		height: 100vh;
+		color: black;
+  min-height: 100%;
+	}
+	div a.nav:hover {
+		background-color: #666666; 
+	}
+	div.navdiv { 
+		background-color: #222222;
+	}
+	p.reg {
+		font-size: 150%;
+	}
+
+{% endblock%}
+
+{% block body %}
+	<div class="norm">
+		<center><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Flag_of_Germany_%283-2_aspect_ratio%29.svg/2000px-Flag_of_Germany_%283-2_aspect_ratio%29.svg.png" alt="German Flag" style="hieght: 250px; width: 200px;" ></center>
+		<h1>Definite articles in accusative and nominative case</h1>
+		<p class="reg">When you have something with <i>der</i> but it is the direct object, it is <i>den</i>. But how do you know if it is the direct object? It's rather simple. If the object is <i<doing the action</i> then it is der. For example, Der Pulli is preiswert. The pullover is being cheap, so it is der. However, you can also have Ich kaufe den Pulli. This is <i>den</i> because it being acted upon.</p>
+		<h2 style="position: left;">Ein, eine, and einen</h2>
+		<p class="reg">As you probably already know, ein is ein when conjugated with der, eine with die, and ein with das. However, when you have <i>den</i>, it is Einen.<br>Some example sentances are:<br> M/chtest du ein Glas Oragensaft? Ja, ich möchte einen Orangensaft<br>Ich kaufe einen Pulli<br></p>
+		<h2 style="position: left;">Er, Sie, Es, Ihr</h2>
+		<p> class="reg">When you use Er, it is Ihr if the word would be conjugated with Den, or to say, if it is the direct object.</p>
+	</div>
+{% endblock %}
