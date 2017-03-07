@@ -1,0 +1,261 @@
+{% extends "basicSite"  %}
+{% block custcss %}
+	#canvas{ 
+		background-color: lightgreen;
+		position: center;
+	}
+{% endblock %}
+{% block javascript %}
+	<script type="text/javascript">
+var canvas;
+var ctx;
+var objects = [];
+var amTutorial = 0;
+var moneyForever = 0;
+var money = 0;
+var currentBuildType = "house";
+
+var shadowX = 0;
+var shadowY = 0;
+
+function MyText(x,y,color,text,font)
+{
+	this.x = x;
+	this.y = y;
+	this.text = text;
+	this.color = color;
+	this.font = font || "12px Arial";
+	this.draw = function(offx,offy)
+	{
+		ctx.fillStyle = this.color;
+		ctx.font = this.font;
+		ctx.fillText(this.text,this.x+(offx || 0),this.y+(offy || 0));
+	}
+			
+}
+
+function MyObject(x,y,shapex,shapey,color,type,text,textcolor)
+{
+	this.x = x;
+	this.y = y;
+	this.shapex = shapex;
+	this.shapey = shapey;
+	this.visible = true;
+	if ( type == "image" )
+	{	
+		this.image = new Image()
+		this.image.src = color;
+	}
+	else
+	{
+		this.color = color;
+	}
+	this.texts = [];
+	if (!text) {}
+	else if (typeof text == "string")
+	{
+		if (typeof textcolor == 'undefined')
+		{
+			textcolor = "black";
+		}
+		this.texts[0] = new MyText(0,(shapey/2),textcolor,text);
+	}
+	else
+	{
+		this.texts = text;
+	} 
+	this.checkIfClicked = function(mx,my)
+	{
+		if (!this.visible)
+		{
+			return false;
+		}
+		if (mx <= this.shapex+this.x && mx >= this.x && my <= this.shapey+this.y && my >= this.y)
+		{
+			this.click();
+			return true;
+		}
+		return false;
+	};
+	this.click = function()
+	{
+		console.log("clicked");
+	};
+	this.draw = function()
+	{
+		if (!this.visible)
+		{
+			return;
+		}
+		if (type == "image")
+		{	
+			ctx.drawImage(this.image,this.x,this.y,this.shapex,this.shapey);
+		}
+		else
+		{
+			ctx.fillStyle = color;
+			ctx.fillRect(this.x,this.y,this.shapex,this.shapey);
+			/*ctx.fillStyle = "black";
+			ctx.font = "12px Arial";
+			ctx.fillText(this.text,this.x,this.y+(this.shapey/2));*/
+			
+				
+		}
+		if (typeof this.texts != 'undefined')
+		{
+			for (var i = 0; i < this.texts.length; i++)
+			{
+				this.texts[i].draw(this.x,this.y);
+			}
+		}
+	};		
+	this.tick = function()
+	{
+	}
+
+}
+MyBuilding = function(x,y,shapex,shapey,color,text,revPerTick,maxHolding)
+{
+	maxHolding = maxHolding || 10;
+	var myTexts = [];
+	myTexts[0] = new MyText(0,12,"yellow",text);
+	myTexts[1] = new MyText(0,26,"black","0/"+maxHolding);
+	
+
+	MyObject.call(this,x,y,shapex,shapey,color,"",myTexts);
+
+	this.revPerTick = revPerTick;
+	this.maxHolding = maxHolding;	
+	this.holding = 0;
+	this.tick = function()
+	{	
+/*		moneyForever += revPerTick;
+		money += revPerTick;*/
+		this.holding += revPerTick;
+		this.texts[1].text = Math.floor(this.holding)+"/"+this.maxHolding;
+		
+	}
+}
+MyButton = function(x,y,shapex,shapey,color,text,yourFunction)
+{
+	MyObject.call(this,x,y,shapex,shapey,color,"",text);
+	this.yourFunction = yourFunction;
+	this.click = function()
+	{
+		this.yourFunction();
+	}
+}
+		
+
+
+function draw_(time)
+{
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "gray";
+	ctx.fillRect(shadowX,shadowY,50,50);
+	for (var i = 0; i < objects.length; i++)
+	{
+		objects[i].draw();
+	}	
+	window.requestAnimationFrame(draw_);
+}
+function doShadow(event)
+{
+	var rect = canvas.getBoundingClientRect();
+	var x = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
+	var y = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
+	shadowX = Math.floor(x/50)*50; //gets rid of some percision to effectively lock it to a grid
+	shadowY = Math.floor(y/50)*50;
+}
+function tick()
+{
+	for (var i = 0; i < objects.length; i++)
+	{
+		objects[i].tick();
+	}	
+	
+}
+setInterval(tick,100);
+
+function init()
+{
+	objects[0] = new MyObject(0,250,383,260,"http://events.info.tm/gamefiles/tutorialGuy.png","image");
+	objects[1] = new MyObject(200,150,320,239,"http://events.info.tm/gamefiles/quote_tutorial.png","image");
+	objects[2] = new MyObject(0,500,1080,120,"#CCCCFF","");
+	objects[3] = new MyObject(0,587,100,20,"white","","Selected: house","red");
+	objects[4] = new MyButton(20,517,50,50,"brown","House", function() { setBuild("house"); });
+	objects[5] = new MyButton(80,517,50,50,"gray","Mill", function() { setBuild("mill"); });	
+	
+	canvas = document.getElementById("canvas");
+	canvas.addEventListener("mousedown", getPosition, false);
+	canvas.addEventListener("mousemove", doShadow, false);
+	document.addEventListener( "keypress", getKeyDown, false );
+	ctx = canvas.getContext("2d");
+	window.requestAnimationFrame(draw_);
+	
+	
+}
+function setBuild(type)
+{
+	currentBuildType = type;
+	objects[3].text = "Selected: "+type;
+}
+	
+document.addEventListener("DOMContentLoaded", init, false);
+function getPosition(event)
+{
+	if (amTutorial == 0 || amTutorial == 2)
+	{
+		return false;
+	}
+	var rect = canvas.getBoundingClientRect();
+	var x = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
+	var y = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
+	var didClick = false;
+	for (var i = 0; i < objects.length; i++)
+	{
+		
+		if (objects[i].checkIfClicked(x,y))
+		{
+			didClick = true;
+		}
+	}	
+	if (!didClick)
+	{
+		x = Math.floor(x/50)*50; //gets rid of some percision to effectively lock it to a grid
+		y = Math.floor(y/50)*50;
+		objects[objects.length] = new MyBuilding(x,y,50,50,"red","House",0.01);
+		console.log("ayyy");
+	}
+	//alert(x +","+y);
+	//http://stackoverflow.com/questions/17130395/real-mouse-position-in-canvas?scrlybrkr=b8183739
+}
+function getKeyDown(event)
+{
+	console.log(event);
+	if (event.key == "Enter" && amTutorial == 0)
+	{
+		objects[0].visible = false;
+		objects[1].visible = false;
+		amTutorial = 1;
+	}
+	else if (amTutorial == 0)
+	{}
+	else if (event.key == "/")
+	{
+		console.log(money);
+		console.log("$$$$");
+	}
+}
+</script>
+
+
+
+
+{% endblock %}
+{% block body %}
+	<div class="norm">
+		<h1 class="tophead">Social Studies Videogame</h1>
+		<center><canvas id="canvas" width=1080 height=607></canvas></center>
+	</div>
+{% endblock %}

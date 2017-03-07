@@ -40,10 +40,11 @@ start = True
 maintainance = False 
 
 #~~Changes to them via args~~#
+
 for arg in sys.argv:
 	if arg == "-d":
 		print("***DEBUG MODE***")
-	        port = 81
+	        port = 8081
         	debug=True
 	elif arg == "-https":
 		debug=True
@@ -69,20 +70,6 @@ print(maintainance)
 
 
 
-
-'''if len(sys.argv) > 1 and sys.argv[1] == "-d":
-	print("***DEBUG MODE***")
-	port = 81
-	app.debug=True
-if len(sys.argv) > 1 and sys.argv[1] == "-fixthisdamnit":
-	print("***DEBUG MODE***")
-	port = 81
-	app.debug=True
-	ssl_context = ('/website/cert', '/website/key')
-elif len(sys.argv) > 1 and sys.argv[1] == "-c":
-	#shitty area for this, move it you lazy f
-	clrForum()
-	errorOut(); '''
 
 
 ###############
@@ -124,6 +111,10 @@ if start:
 		@app.route("/aboutme")
 		def aboutme():
 			return render_template("aboutme.html")
+		@app.route("/opengraphpaper")
+		def opengraphpaer():
+			return render_template("opengraphpaper.html")
+
 		@app.route("/geterror/")
 		def getanerror():
 			return "string"-"string"
@@ -325,7 +316,13 @@ if start:
 		def german():
 			return render_template("german.html")			
 
-
+		@app.route("/game")
+		def game2222():
+			return render_template("videogame.html")
+		@app.route("/game/")
+		def gameslash():
+			return '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/game" /></head></html>'
+		
 
 		###################
 		#--Special Pages--#

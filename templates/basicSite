@@ -79,39 +79,49 @@
 			}
 			{% block custcss %} {% endblock %}
 		</style>
-		{% block nav %}
-			<div class="navdiv">
-				<div class = "navl">
-					{% block lstats %}
-					<!--this page has no navl-->
-					<p> </p> 
-					<!--^^placeholder, keeps the center menu from aligning to the left^^-->
-					{% endblock%}
-				</div>
-				<div class="navn">
-					{% block mstats %}
-						<!--standard middle-menubar-->
-						<a class="nav" href="/">Home</a>
-						<a class="nav" href="/aboutme">About me</a>
-						<a class="nav" href="/forum">Forum</a>
-						<a class="nav" href="/source/all">Hosted files</a>
-						<!--extensions, if any-->
-						{% block mstats_ext %}{% endblock %} 
-					{% endblock%}
-				
-				</div>
-				<div class = "navr">
-					{% block rstats %}
-					<!--this page has no navr. no placeholder needed for navr.-->
-					{% endblock %}
-				</div>
-
-
+		<!--[if IE]>
+		<style>
+			html {
+				font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+			}
+		</style>
+		<![endif]-->
+		{% block javascript %} {% endblock %}
+	</head>
+	{% block nav %}
+		<div class="navdiv">
+			<div class = "navl">
+				{% block lstats %}
+				<!--this page has no navl-->
+				<p> </p> 
+				<!--^^placeholder, keeps the center menu from aligning to the left^^-->
+				{% endblock%}
 			</div>
-		{% endblock %}
-				{% block body %}
-		<body>
-			<p>Please add a body to this template.</p>
-		</body>
+			<div class="navn">
+				{% block mstats %}
+					<!--standard middle-menubar-->
+					<a class="nav" href="/">Home</a>
+					<a class="nav" href="/aboutme">About me</a>
+					<a class="nav" href="/opengraphpaper">OpenGraphpaper</a>
+					<a class="nav" href="/forum">Forum</a>
+					<a class="nav" href="/source/all">Hosted files</a>
+					<!--extensions, if any-->
+					{% block mstats_ext %}{% endblock %} 
+				{% endblock%}
+			
+			</div>
+			<div class = "navr">
+				{% block rstats %}
+				<!--this page has no navr. no placeholder needed for navr.-->
+				{% endblock %}
+			</div>
+
+
+		</div>
 	{% endblock %}
+			{% block body %}
+	<body>
+		<p>Please add a body to this template.</p>
+	</body>
+{% endblock %}
 
